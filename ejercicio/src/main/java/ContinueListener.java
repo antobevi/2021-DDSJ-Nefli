@@ -10,12 +10,14 @@ public class ContinueListener {
   }
 
   public void onContinue(Integer idVideo) {
-    if(videos.stream().anyMatch(video -> video.getIdVideo().equals(idVideo))) { // TODO: Abstraer logica repetida
-      Video video = videos.stream().filter(unVideo -> unVideo.getIdVideo().equals(idVideo))
-          .collect(Collectors.toList()).get(0);
-
-      // TODO: Reproducir video desde el minuto pausado
-      //reproductor.play(video.getIdVideo(), video.getMinuteStop());
+    Video video = this.videoPendienteDeTerminarSegun(idVideo);
+    if(video != null) {
+      /* Reproduce el video desde el minuto pausado, pero para esto deberia recibir el Reproductor por parametro.
+         Como es el Reproductor el que tiene la "responsabilidad" de continuar la reproduccion, es el
+         metodo continueSeeing el que se encarga de volver a reproducir el contenido de la siguiente manera
+         en un objeto que implemente Reproductor:
+      */
+      // reproductor.play(video.getIdVideo(), video.getMinuteStop());
 
       videos.remove(video);
     }
@@ -28,4 +30,10 @@ public class ContinueListener {
   public void agregarVideo(Video video) {
     videos.add(video);
   }
+
+  public Video videoPendienteDeTerminarSegun(Integer idVideo) {
+    return videos.stream().filter(unVideo -> unVideo.getIdVideo().equals(idVideo))
+        .collect(Collectors.toList()).get(0);
+  }
+
 }
